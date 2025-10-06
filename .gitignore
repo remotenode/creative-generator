@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+
+# Node & general
+node_modules/
+dist/
+build/
+*.log
+.env
+.env.*
+coverage/
+\.vercel/
+.next/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# IDEs
+.vscode/
+.idea/
