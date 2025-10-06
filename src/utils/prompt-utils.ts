@@ -46,12 +46,16 @@ Generate engaging ad copy that resonates with this specific persona using natura
 }
 
 function extractKeywords(prompt: string): string {
+  // Common stop words to filter out
+  const stopWords = new Set(['for', 'with', 'that', 'this', 'they', 'them', 'their', 'help', 'make', 'create', 'build', 'app', 'service', 'product', 'the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from', 'up', 'about', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'between', 'among', 'under', 'over', 'within', 'without', 'against', 'across', 'behind', 'beyond', 'inside', 'outside']);
+  
   const keywords = prompt
     .toLowerCase()
-    .split(' ')
+    .replace(/[^\w\s]/g, ' ')
+    .split(/\s+/)
     .filter(word => 
       word.length > 3 && 
-      !['for', 'with', 'that', 'this', 'they', 'them', 'their', 'help', 'make', 'create', 'build', 'app', 'service', 'product'].includes(word)
+      !stopWords.has(word)
     )
     .slice(0, 5)
     .join(', ');
@@ -60,30 +64,27 @@ function extractKeywords(prompt: string): string {
 }
 
 function identifyProductType(prompt: string): string {
-  const lower = prompt.toLowerCase();
-  if (lower.includes('app') || lower.includes('mobile') || lower.includes('software')) return 'Mobile App/Software';
-  if (lower.includes('fitness') || lower.includes('health') || lower.includes('workout')) return 'Fitness/Health Service';
-  if (lower.includes('food') || lower.includes('restaurant') || lower.includes('delivery')) return 'Food Service';
-  if (lower.includes('fashion') || lower.includes('clothing') || lower.includes('style')) return 'Fashion/Clothing';
-  if (lower.includes('education') || lower.includes('learning') || lower.includes('course')) return 'Education Service';
-  if (lower.includes('travel') || lower.includes('trip') || lower.includes('vacation')) return 'Travel Service';
-  if (lower.includes('finance') || lower.includes('banking') || lower.includes('money')) return 'Financial Service';
-  return 'Product/Service';
+  // Extract key nouns from the prompt to identify the product type
+  const words = prompt.toLowerCase()
+    .replace(/[^\w\s]/g, ' ')
+    .split(/\s+/)
+    .filter(word => word.length > 3)
+    .slice(0, 3);
+  
+  return words.length > 0 ? words.join(' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Product/Service';
 }
 
 function extractKeyBenefits(prompt: string): string {
-  const benefits = [];
-  const lower = prompt.toLowerCase();
+  // Extract action words and descriptive terms that indicate benefits
+  const benefitWords = prompt.toLowerCase()
+    .split(/\s+/)
+    .filter(word => {
+      const benefitKeywords = ['help', 'save', 'improve', 'enhance', 'boost', 'increase', 'reduce', 'optimize', 'streamline', 'simplify', 'accelerate', 'maximize', 'minimize', 'enable', 'provide', 'deliver', 'offer', 'ensure', 'guarantee', 'support', 'protect', 'secure', 'connect', 'organize', 'manage', 'track', 'monitor', 'analyze', 'customize', 'personalize'];
+      return benefitKeywords.includes(word);
+    })
+    .slice(0, 3);
   
-  if (lower.includes('help') || lower.includes('assist')) benefits.push('assistance');
-  if (lower.includes('save') || lower.includes('time')) benefits.push('time-saving');
-  if (lower.includes('easy') || lower.includes('simple')) benefits.push('ease of use');
-  if (lower.includes('fast') || lower.includes('quick')) benefits.push('speed');
-  if (lower.includes('professional') || lower.includes('expert')) benefits.push('professional quality');
-  if (lower.includes('healthy') || lower.includes('fitness')) benefits.push('health benefits');
-  if (lower.includes('convenient') || lower.includes('convenience')) benefits.push('convenience');
-  
-  return benefits.length > 0 ? benefits.join(', ') : 'value, quality, convenience';
+  return benefitWords.length > 0 ? benefitWords.join(', ') : 'value, quality, convenience';
 }
 
 function buildTargetAudience(persona: PersonaData, country: string): string {
@@ -91,15 +92,24 @@ function buildTargetAudience(persona: PersonaData, country: string): string {
 }
 
 function getProfessionContext(profession: string): string {
-  const professionMap: Record<string, string> = {
-    'Software Engineer': 'modern tech office environment',
-    'Marketing Manager': 'creative workspace with marketing materials',
-    'Sales Representative': 'dynamic sales environment',
-    'Healthcare Professional': 'clean, medical professional setting',
-    'Teacher': 'educational environment',
-    'Consultant': 'sophisticated business setting',
-    'Entrepreneur': 'innovative startup atmosphere',
-    'Student': 'academic or learning environment'
-  };
-  return professionMap[profession] || 'professional business setting';
+  // Generate a generic professional context based on the profession name
+  const professionLower = profession.toLowerCase();
+  
+  if (professionLower.includes('tech') || professionLower.includes('software') || professionLower.includes('engineer')) {
+    return 'modern tech environment';
+  }
+  if (professionLower.includes('creative') || professionLower.includes('design') || professionLower.includes('marketing')) {
+    return 'creative professional setting';
+  }
+  if (professionLower.includes('health') || professionLower.includes('medical')) {
+    return 'professional healthcare setting';
+  }
+  if (professionLower.includes('education') || professionLower.includes('teacher') || professionLower.includes('student')) {
+    return 'educational environment';
+  }
+  if (professionLower.includes('business') || professionLower.includes('consultant') || professionLower.includes('manager')) {
+    return 'professional business setting';
+  }
+  
+  return 'professional work environment';
 }
