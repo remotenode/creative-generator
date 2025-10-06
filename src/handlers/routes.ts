@@ -1,6 +1,5 @@
 import { Env, GenerateAdsRequest } from '../types';
 import { AdGeneratorEntrypoint } from '../services/ad-generator';
-import { HealthService } from '../services/health';
 
 export class RouteHandler {
   private corsHeaders = { 
@@ -59,8 +58,8 @@ export class RouteHandler {
   }
 
   private async handleHealth(): Promise<Response> {
-    const healthService = new HealthService(this.env);
-    const result = await healthService.check();
+    const adGenerator = new AdGeneratorEntrypoint(this.env);
+    const result = await adGenerator.health();
     
     return new Response(JSON.stringify(result), { 
       headers: { 'Content-Type': 'application/json', ...this.corsHeaders } 
