@@ -1,6 +1,6 @@
 import { WorkerEntrypoint } from 'cloudflare:workers';
 import { Env, GenerateAdsRequest, GenerateAdsResponse, GeneratedAd } from './types';
-import { generateImagePrompt, generateTextPrompt, calculateQualityScore, generateTargetingDescription } from './utils';
+import { createImagePrompt, createTextPrompt, calculateQualityScore, generateTargetingDescription } from './utils';
 
 export class AdGeneratorEntrypoint extends WorkerEntrypoint<Env> {
   async generateAds(request: GenerateAdsRequest): Promise<GenerateAdsResponse> {
@@ -39,12 +39,14 @@ export class AdGeneratorEntrypoint extends WorkerEntrypoint<Env> {
   }
 
   private async generateSingleAd(persona: any, request: GenerateAdsRequest, requestId: string): Promise<GeneratedAd> {
-    // Generate image
-    const imagePrompt = generateImagePrompt(request.prompt, persona.persona, request.country);
+    // Create enhanced prompts from original request prompt
+    const imagePrompt = createImagePrompt(request.prompt, persona.persona, request.country);
+    const textPrompt = createTextPrompt(request.prompt, persona.persona, request.country, request.language);
+
+    // Generate image using enhanced prompt
     const imageResponse = await this.env.IMAGE_GENERATOR.generateImage(imagePrompt, { count: 1, size: "1024x1024" });
 
-    // Generate text
-    const textPrompt = generateTextPrompt(request.prompt, persona.persona, request.country, request.language);
+    // Generate text using enhanced prompt
     const textResponse = await this.env.TEXT_GENERATOR.generate({ prompt: textPrompt, adTitleLimit: 30, adTextLimit: 90 });
 
     const bestText = textResponse.data.variants.reduce((best, current) => 
