@@ -1,8 +1,7 @@
-import { PersonaData } from './types';
+import { PersonaData } from '../types/persona';
 
 // Create enhanced image prompt from original request prompt
 export function createImagePrompt(originalPrompt: string, persona: PersonaData, country: string): string {
-  // Extract key elements from original prompt
   const keywords = extractKeywords(originalPrompt);
   const productType = identifyProductType(originalPrompt);
   const targetAudience = buildTargetAudience(persona, country);
@@ -46,7 +45,6 @@ Psychographics:
 Generate engaging ad copy that resonates with this specific persona using natural ${language} appropriate for ${country} market.`;
 }
 
-// Helper functions
 function extractKeywords(prompt: string): string {
   const keywords = prompt
     .toLowerCase()
@@ -93,7 +91,7 @@ function buildTargetAudience(persona: PersonaData, country: string): string {
 }
 
 function getProfessionContext(profession: string): string {
-  const professionMap = {
+  const professionMap: Record<string, string> = {
     'Software Engineer': 'modern tech office environment',
     'Marketing Manager': 'creative workspace with marketing materials',
     'Sales Representative': 'dynamic sales environment',
@@ -104,17 +102,4 @@ function getProfessionContext(profession: string): string {
     'Student': 'academic or learning environment'
   };
   return professionMap[profession] || 'professional business setting';
-}
-
-export function calculateQualityScore(persona: PersonaData, adText: string): number {
-  let score = 5;
-  if (persona.profession && persona.ageRange) score += 1;
-  if (persona.primaryInterest && persona.values) score += 1;
-  if (adText.length > 20 && adText.length < 200) score += 1;
-  if (adText.includes('!') || adText.includes('?')) score += 1;
-  return Math.min(10, Math.max(1, score));
-}
-
-export function generateTargetingDescription(persona: PersonaData, country: string): string {
-  return `${persona.ageRange} ${persona.gender} ${persona.profession} in ${persona.location}, ${persona.incomeLevel} income, ${persona.lifestyle} lifestyle.`;
 }
