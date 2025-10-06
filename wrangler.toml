@@ -1,6 +1,21 @@
 name = "ad-generator"
 main = "src/index.ts"
 compatibility_date = "2024-01-15"
+account_id = "a872f67a3331071736867b65a7c92f03"
+
+# Service bindings to existing generators
+[[services]]
+binding = "PERSONA_GENERATOR"
+service = "persona-generator-prod"
+entrypoint = "PersonaGeneratorEntrypoint"
+
+[[services]]
+binding = "IMAGE_GENERATOR"
+service = "image-generator-api"
+
+[[services]]
+binding = "TEXT_GENERATOR"
+service = "creative-text-generator"
 
 # Environment variables for configuration
 [vars]
