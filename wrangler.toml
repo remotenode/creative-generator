@@ -7,15 +7,16 @@ account_id = "a872f67a3331071736867b65a7c92f03"
 [[services]]
 binding = "PERSONA_GENERATOR"
 service = "persona-generator-prod"
-entrypoint = "PersonaGeneratorEntrypoint"
+environment = "production"
 
-[[services]]
-binding = "IMAGE_GENERATOR"
-service = "image-generator-api"
+# TODO: Add these services when they are deployed
+# [[services]]
+# binding = "IMAGE_GENERATOR"
+# service = "image-generator-api"
 
-[[services]]
-binding = "TEXT_GENERATOR"
-service = "creative-text-generator"
+# [[services]]
+# binding = "TEXT_GENERATOR"
+# service = "creative-text-generator"
 
 # Environment variables for configuration
 [vars]
