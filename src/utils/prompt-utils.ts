@@ -60,7 +60,7 @@ function extractKeywords(prompt: string): string {
     .slice(0, 5)
     .join(', ');
     
-  return keywords || 'professional, innovative, quality';
+  return keywords || 'key, features, benefits';
 }
 
 function identifyProductType(prompt: string): string {
@@ -75,12 +75,23 @@ function identifyProductType(prompt: string): string {
 }
 
 function extractKeyBenefits(prompt: string): string {
-  // Extract action words and descriptive terms that indicate benefits
-  const benefitWords = prompt.toLowerCase()
+  // Extract descriptive adjectives and action verbs that indicate benefits
+  const words = prompt.toLowerCase()
+    .replace(/[^\w\s]/g, ' ')
     .split(/\s+/)
+    .filter(word => word.length > 3);
+  
+  // Find words that end with common benefit suffixes or are action verbs
+  const benefitWords = words
     .filter(word => {
-      const benefitKeywords = ['help', 'save', 'improve', 'enhance', 'boost', 'increase', 'reduce', 'optimize', 'streamline', 'simplify', 'accelerate', 'maximize', 'minimize', 'enable', 'provide', 'deliver', 'offer', 'ensure', 'guarantee', 'support', 'protect', 'secure', 'connect', 'organize', 'manage', 'track', 'monitor', 'analyze', 'customize', 'personalize'];
-      return benefitKeywords.includes(word);
+      // Check for action verb patterns (ending in -ing, -ed, -ize, -ify, etc.)
+      const actionPatterns = /(ing|ed|ize|ify|en|ate|fy|ise)$/;
+      // Check for descriptive adjective patterns (ending in -ive, -al, -ful, -less, -able, etc.)
+      const descriptivePatterns = /(ive|al|ful|less|able|ible|ous|ious|ent|ant|ic|ical)$/;
+      // Check for comparative/superlative forms
+      const comparativePatterns = /(er|est|ier|iest)$/;
+      
+      return actionPatterns.test(word) || descriptivePatterns.test(word) || comparativePatterns.test(word);
     })
     .slice(0, 3);
   
@@ -92,23 +103,20 @@ function buildTargetAudience(persona: PersonaData, country: string): string {
 }
 
 function getProfessionContext(profession: string): string {
-  // Generate a generic professional context based on the profession name
+  // Generate a generic professional context based on profession characteristics
   const professionLower = profession.toLowerCase();
   
-  if (professionLower.includes('tech') || professionLower.includes('software') || professionLower.includes('engineer')) {
-    return 'modern tech environment';
-  }
-  if (professionLower.includes('creative') || professionLower.includes('design') || professionLower.includes('marketing')) {
-    return 'creative professional setting';
-  }
-  if (professionLower.includes('health') || professionLower.includes('medical')) {
-    return 'professional healthcare setting';
-  }
-  if (professionLower.includes('education') || professionLower.includes('teacher') || professionLower.includes('student')) {
-    return 'educational environment';
-  }
-  if (professionLower.includes('business') || professionLower.includes('consultant') || professionLower.includes('manager')) {
-    return 'professional business setting';
+  // Extract key descriptive words from the profession
+  const professionWords = professionLower.split(/\s+/);
+  
+  // Find the most descriptive word (usually the longest or most specific)
+  const descriptiveWord = professionWords
+    .filter(word => word.length > 4)
+    .sort((a, b) => b.length - a.length)[0] || professionWords[0];
+  
+  // Generate context based on the descriptive word
+  if (descriptiveWord) {
+    return `${descriptiveWord} professional environment`;
   }
   
   return 'professional work environment';
