@@ -8,3 +8,9 @@ DEFAULT_AD_COUNT = "3"
 MAX_AD_COUNT = "10"
 DEFAULT_IMAGE_STYLE = "REALISTIC"
 DEFAULT_IMAGE_QUALITY = "HIGH"
+
+# To use this Worker as a service binding in another Worker, add:
+# [[services]]
+# binding = "AD_GENERATOR"
+# service = "ad-generator"
+# entrypoint = "AdGeneratorEntrypoint"
