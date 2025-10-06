@@ -6,8 +6,8 @@ import { AdGeneratorEntrypoint } from './services/ad-generator';
 export { AdGeneratorEntrypoint };
 
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
-    const routeHandler = new RouteHandler(env);
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+    const routeHandler = new RouteHandler(env, ctx);
     return await routeHandler.handleRequest(request);
   }
-} as ExportedHandler<Env>;
+};

@@ -57,7 +57,7 @@ export class AdGeneratorEntrypoint extends WorkerEntrypoint<Env> {
     // Generate text using enhanced prompt
     const textResponse = await this.env.TEXT_GENERATOR.generate({ prompt: textPrompt, adTitleLimit: 30, adTextLimit: 90 });
 
-    const bestText = textResponse.data.variants.reduce((best, current) => 
+    const bestText = textResponse.data.variants.reduce((best: any, current: any) => 
       current.qualityScore > best.qualityScore ? current : best
     );
 

@@ -7,7 +7,7 @@ export class RouteHandler {
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS' 
   };
 
-  constructor(private env: Env) {}
+  constructor(private env: Env, private ctx: ExecutionContext) {}
 
   async handleRequest(request: Request): Promise<Response> {
     const url = new URL(request.url);
@@ -49,7 +49,7 @@ export class RouteHandler {
       });
     }
 
-    const adGenerator = new AdGeneratorEntrypoint(this.env);
+    const adGenerator = new AdGeneratorEntrypoint(this.ctx, this.env);
     const result = await adGenerator.generateAds(body);
     
     return new Response(JSON.stringify(result), { 
@@ -58,7 +58,7 @@ export class RouteHandler {
   }
 
   private async handleHealth(): Promise<Response> {
-    const adGenerator = new AdGeneratorEntrypoint(this.env);
+    const adGenerator = new AdGeneratorEntrypoint(this.ctx, this.env);
     const result = await adGenerator.health();
     
     return new Response(JSON.stringify(result), { 
