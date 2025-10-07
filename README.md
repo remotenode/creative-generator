@@ -2,6 +2,15 @@
 
 Cloudflare Worker that generates targeted ads using persona, image, and text generators via RPC.
 
+## Features
+
+✅ **RPC Integration** - Direct worker-to-worker communication with Persona Generator  
+✅ **Type Safety** - Full TypeScript support with proper interfaces  
+✅ **20 Persona Characteristics** - Rich demographic, professional, personality, and behavioral data  
+✅ **High Performance** - Low latency RPC calls without HTTP overhead  
+
+📖 **[Read the RPC Integration Guide](./RPC_INTEGRATION.md)** for detailed documentation.
+
 ## API
 
 ### Generate Ads

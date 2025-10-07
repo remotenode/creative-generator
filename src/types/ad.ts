@@ -6,7 +6,8 @@ export interface GeneratedAd {
   id: string;
   persona: PersonaResponse;
   image: ImageData;
-  text: AdTextVariant;
+  textVariants: AdTextVariant[];  // Array of all text options
+  text: AdTextVariant;  // Best/recommended text variant
   targeting: { country: string; language: string; demographics: string; };
   qualityScore: number;
   generatedAt: string;

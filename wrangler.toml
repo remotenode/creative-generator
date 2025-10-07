@@ -1,22 +1,22 @@
 name = "ad-generator"
 main = "src/index.ts"
-compatibility_date = "2024-01-15"
+compatibility_date = "2024-04-03"
 account_id = "a872f67a3331071736867b65a7c92f03"
 
 # Service bindings to existing generators
 [[services]]
 binding = "PERSONA_GENERATOR"
-service = "persona-generator-prod"
-environment = "production"
+service = "persona-generator"
+entrypoint = "PersonaGeneratorEntrypoint"
 
-# TODO: Add these services when they are deployed
-# [[services]]
-# binding = "IMAGE_GENERATOR"
-# service = "image-generator-api"
+[[services]]
+binding = "IMAGE_GENERATOR"
+service = "image-generator-api"
 
-# [[services]]
-# binding = "TEXT_GENERATOR"
-# service = "creative-text-generator"
+[[services]]
+binding = "TEXT_GENERATOR"
+service = "creative-text-generator"
+entrypoint = "TextGeneratorEntrypoint"
 
 # Environment variables for configuration
 [vars]
@@ -25,8 +25,39 @@ MAX_AD_COUNT = "10"
 DEFAULT_IMAGE_STYLE = "REALISTIC"
 DEFAULT_IMAGE_QUALITY = "HIGH"
 
+# Static assets
+[[rules]]
+globs = ["**/*.yaml"]
+type = "Text"
+
+# Production environment configuration
+[env.production]
+name = "ad-generator-prod"
+
+# Service bindings for production
+[[env.production.services]]
+binding = "PERSONA_GENERATOR"
+service = "persona-generator-prod"
+entrypoint = "PersonaGeneratorEntrypoint"
+
+[[env.production.services]]
+binding = "IMAGE_GENERATOR"
+service = "image-generator-api-production"
+
+[[env.production.services]]
+binding = "TEXT_GENERATOR"
+service = "creative-text-generator"
+entrypoint = "TextGeneratorEntrypoint"
+
+# Production environment variables
+[env.production.vars]
+DEFAULT_AD_COUNT = "3"
+MAX_AD_COUNT = "10"
+DEFAULT_IMAGE_STYLE = "REALISTIC"
+DEFAULT_IMAGE_QUALITY = "HIGH"
+
 # To use this Worker as a service binding in another Worker, add:
 # [[services]]
 # binding = "AD_GENERATOR"
-# service = "ad-generator"
+# service = "ad-generator-prod"
 # entrypoint = "AdGeneratorEntrypoint"
